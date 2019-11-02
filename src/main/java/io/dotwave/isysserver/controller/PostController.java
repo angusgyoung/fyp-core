@@ -1,6 +1,7 @@
 package io.dotwave.isysserver.controller;
 
 import io.dotwave.isysserver.data.PostRepository;
+import io.dotwave.isysserver.data.UserRepository;
 import io.dotwave.isysserver.model.post.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -15,9 +16,12 @@ public class PostController {
     private static final String SIZE_QUERY_PARAM = "size";
 
     private PostRepository postRepository;
+    private UserRepository userRepository;
 
-    public PostController(@Autowired PostRepository postRepository) {
+    public PostController(@Autowired PostRepository postRepository,
+                          @Autowired UserRepository userRepository) {
         this.postRepository = postRepository;
+        this.userRepository = userRepository;
     }
 
     @GetMapping("")
@@ -28,7 +32,8 @@ public class PostController {
 
     @PostMapping("")
     public ResponseEntity createPost(@RequestBody Post post) {
-        return ResponseEntity.status(202).body(postRepository.save(new Post(post.getContent(),
-                post.getUsername())));
+        if (userRepository.existsByUsername(post.getUsername())) {
+            return ResponseEntity.accepted().body(postRepository.save(post));
+        } else return ResponseEntity.notFound().build();
     }
 }
