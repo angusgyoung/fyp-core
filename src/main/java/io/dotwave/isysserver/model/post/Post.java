@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
+import javax.validation.constraints.NotNull;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -15,7 +17,13 @@ public class Post {
     @Id
     public String id;
 
+    @NotNull
     private String content;
     private long timestamp;
+    @NotNull
     private String username;
+
+    public Post(String content, String username) {
+
+    }
 }
