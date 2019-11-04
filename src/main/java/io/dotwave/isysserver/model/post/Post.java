@@ -19,7 +19,7 @@ public class Post {
 
     @NotNull
     private String content;
-    private long timestamp;
+    private Long timestamp;
     @NotNull
     private String username;
 }

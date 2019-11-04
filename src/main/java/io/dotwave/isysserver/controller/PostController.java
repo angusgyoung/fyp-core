@@ -59,13 +59,13 @@ public class PostController {
     @SendTo("/topic/posts")
     public ResponseEntity createPost(@RequestBody Post post) {
         if (profileRepository.existsByUser_Username(post.getUsername())) {
-            post.setTimestamp(new Date().getTime());
+            post.setTimestamp(System.currentTimeMillis() / 1000L);
 
             Post createdPost = postRepository.save(post);
             // send post to both the "posts" topic (for all consumers)
             // and the users individual queue
-            messageBrokerUtil.sendMessage("/topic/posts", post);
-            messageBrokerUtil.sendMessage(String.format("/queue/%s/posts", post.getUsername()), post);
+            messageBrokerUtil.sendMessage("/topic/posts", createdPost);
+            messageBrokerUtil.sendMessage(String.format("/queue/%s/posts", post.getUsername()), createdPost);
 
             return ResponseEntity.accepted().body(createdPost);
         } else return ResponseEntity.notFound().build();
