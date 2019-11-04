@@ -2,7 +2,7 @@ package io.dotwave.isysserver.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dotwave.isysserver.data.PostRepository;
-import io.dotwave.isysserver.data.UserRepository;
+import io.dotwave.isysserver.data.ProfileRepository;
 import io.dotwave.isysserver.model.post.Post;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,23 +38,23 @@ public class PostControllerComponentTest {
     private PostRepository mockPostRepository;
 
     @MockBean
-    private UserRepository mockUserRepository;
+    private ProfileRepository mockProfileRepository;
 
     @Test
     public void givenGetPosts_withValidParameters_200_withData() throws Exception {
 
         List<Post> mockPosts = new ArrayList<>() {
             {
-                add(new Post("Some mock content", "SomeMockUser"));
-                add(new Post("Some mock content", "SomeMockUser"));
-                add(new Post("Some mock content", "SomeMockUser"));
-                add(new Post("Some mock content", "SomeMockUser"));
-                add(new Post("Some mock content", "SomeMockUser"));
-                add(new Post("Some mock content", "SomeMockUser"));
-                add(new Post("Some mock content", "SomeMockUser"));
-                add(new Post("Some mock content", "SomeMockUser"));
-                add(new Post("Some mock content", "SomeMockUser"));
-                add(new Post("Some mock content", "SomeMockUser"));
+                add(new Post());
+                add(new Post());
+                add(new Post());
+                add(new Post());
+                add(new Post());
+                add(new Post());
+                add(new Post());
+                add(new Post());
+                add(new Post());
+                add(new Post());
             }
         };
         when(mockPostRepository.findAll(any(PageRequest.class))).thenReturn(new PageImpl<>(mockPosts));
@@ -73,7 +73,7 @@ public class PostControllerComponentTest {
 
         String username = "TestUsername";
 
-        when(mockUserRepository.existsByUsername(username)).thenReturn(true);
+        when(mockProfileRepository.existsByUser_Username(username)).thenReturn(true);
 
         Post testPost = new Post();
         testPost.setUsername(username);

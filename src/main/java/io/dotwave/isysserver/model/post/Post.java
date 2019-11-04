@@ -22,8 +22,4 @@ public class Post {
     private long timestamp;
     @NotNull
     private String username;
-
-    public Post(String content, String username) {
-
-    }
 }
