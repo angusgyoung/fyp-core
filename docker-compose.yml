@@ -12,6 +12,7 @@ services:
       - 27017:27017
     command: mongod --smallfiles --logpath=/dev/null # --quiet
   isys-server:
+    container_name: isys-server
     build:
       context: ./
       dockerfile: Dockerfile
