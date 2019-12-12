@@ -3,6 +3,7 @@ package io.dotwave.isysserver.controller;
 import io.dotwave.isysserver.data.ProfileRepository;
 import io.dotwave.isysserver.model.profile.Auth0User;
 import io.dotwave.isysserver.model.profile.Profile;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/profile")
+@Slf4j
 public class ProfileController {
 
     private final ProfileRepository profileRepository;
@@ -18,10 +20,14 @@ public class ProfileController {
         this.profileRepository = profileRepository;
     }
 
-    @GetMapping("/{username}")
+    // we need the additional pattern matcher on this
+    // mapping to enquire email addresses as usernames don't
+    // get truncated after the '.'.
+    @GetMapping("/{username:.+}")
     public ResponseEntity getUser(@PathVariable("username") String username) {
-        if (profileRepository.existsByUser_Username(username))
+        if (profileRepository.existsByUser_Username(username)) {
             return ResponseEntity.ok(profileRepository.findByUser_Username(username));
+        }
         else return ResponseEntity.notFound().build();
     }
 
