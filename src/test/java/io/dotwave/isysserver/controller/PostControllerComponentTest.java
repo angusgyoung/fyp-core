@@ -73,10 +73,9 @@ public class PostControllerComponentTest {
 
         String username = "TestUsername";
 
-        when(mockProfileRepository.existsByUser_Username(username)).thenReturn(true);
+        when(mockProfileRepository.existsByUsername(username)).thenReturn(true);
 
         Post testPost = new Post();
-        testPost.setUsername(username);
         testPost.setContent("Some content");
 
         when(mockPostRepository.save(any(Post.class))).thenReturn(testPost);

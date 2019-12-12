@@ -29,7 +29,7 @@ public class ProfileControllerComponentTest {
     public void givenGetUser_thatExists_returnUser() throws Exception {
         String testUsername = "TestUser";
 
-        when(mockProfileRepository.existsByUser_Username(testUsername)).thenReturn(true);
+        when(mockProfileRepository.existsByUsername(testUsername)).thenReturn(true);
 
         this.mockMvc.perform(
                 get("/users/" + testUsername))
@@ -41,7 +41,7 @@ public class ProfileControllerComponentTest {
     public void givenGetExistingUserPosts_returnPosts() throws Exception {
 
         Profile testProfile = new Profile();
-        testProfile.getUser().setUsername("TestUser");
+        testProfile.setUsername("TestUser");
 
         this.mockMvc.perform(
                 get("/users/TestUser/posts"))
