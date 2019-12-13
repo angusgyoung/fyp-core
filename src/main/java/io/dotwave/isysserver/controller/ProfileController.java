@@ -40,9 +40,11 @@ public class ProfileController {
         if (profileRepository.existsByUsername(username)) {
             throw new ValidationException("Username already exists");
         }
-
         String password = body.get("password");
-        return ResponseEntity.status(HttpStatus.CREATED).body(profileRepository.save(new Profile(username, password)));
+
+        // for now we can just use a random image of a cat
+        Profile profile = new Profile(username, password, "https://cataas.com/cat");
+        return ResponseEntity.status(HttpStatus.CREATED).body(profileRepository.save(profile));
     }
 
 }

@@ -1,5 +1,7 @@
 package io.dotwave.isysserver.controller;
 
+import io.dotwave.isysserver.data.ProfileRepository;
+import io.dotwave.isysserver.model.profile.Profile;
 import io.dotwave.isysserver.security.jwt.JwtRequest;
 import io.dotwave.isysserver.security.jwt.JwtResponse;
 import io.dotwave.isysserver.security.jwt.JwtTokenUtil;
@@ -18,14 +20,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AuthController {
 
-    @Autowired
     private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-
-    @Autowired
     private JwtUserDetailsService jwtUserDetailsService;
+    private JwtTokenUtil jwtTokenUtil;
+    private ProfileRepository profileRepository;
+
+    public AuthController(@Autowired AuthenticationManager authenticationManager,
+                          @Autowired JwtUserDetailsService jwtUserDetailsService,
+                          @Autowired JwtTokenUtil jwtTokenUtil,
+                          @Autowired ProfileRepository profileRepository) {
+        this.authenticationManager = authenticationManager;
+        this.jwtUserDetailsService = jwtUserDetailsService;
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.profileRepository = profileRepository;
+    }
 
     @PostMapping("/auth")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
@@ -33,7 +41,10 @@ public class AuthController {
 
         final UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(token));
+
+        // get the users details to return with the token
+        Profile profile = profileRepository.findByUsername(userDetails.getUsername());
+        return ResponseEntity.ok(new JwtResponse(token, profile));
     }
 
     private void authenticate(String username, String password) throws Exception {
