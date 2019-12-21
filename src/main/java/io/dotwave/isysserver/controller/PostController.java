@@ -44,12 +44,13 @@ public class PostController {
     }
 
     @GetMapping("")
-    public ResponseEntity getUserPosts(@RequestParam(value = "username") Optional<String> username,
-                                       @RequestParam(value = PAGE_QUERY_PARAM) Optional<Integer> page,
-                                       @RequestParam(PAGE_SIZE_QUERY_PARAM) Optional<Integer> size) {
+    public ResponseEntity getPosts(@RequestParam(value = "username") Optional<String> username,
+                                   @RequestParam(value = PAGE_QUERY_PARAM) Optional<Integer> page,
+                                   @RequestParam(PAGE_SIZE_QUERY_PARAM) Optional<Integer> size) {
         Integer _page = page.orElse(0);
         Integer _size = size.orElse(10);
 
+        // if the request is for the posts of a particular user
         if (username.isPresent()) {
             String _username = username.get();
             if (profileRepository.existsByUsername(_username)) {
@@ -57,10 +58,15 @@ public class PostController {
                         PageRequest.of(_page, _size));
                 if (postPage.getTotalElements() > 0) {
                     return ResponseEntity.ok(postPage);
-                } else return ResponseEntity.noContent().build();
+                }
             } else return ResponseEntity.notFound().build();
+        } else {
+            Page<Post> postPage = postRepository.findAllByOrderByTimestampDesc(PageRequest.of(_page, _size));
+            if (postPage.getTotalElements() > 0) {
+                return ResponseEntity.ok(postPage);
+            }
         }
-        return ResponseEntity.ok(postRepository.findAllByOrderByTimestampDesc(PageRequest.of(_page, _size)));
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("")

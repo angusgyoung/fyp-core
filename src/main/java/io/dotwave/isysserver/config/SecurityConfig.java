@@ -22,23 +22,21 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-
-    @Autowired
     private JwtUserDetailsService jwtUserDetailsService;
-
-    @Autowired
     private JwtRequestFilter jwtRequestFilter;
+
+    public SecurityConfig(@Autowired JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
+                          @Autowired JwtUserDetailsService jwtUserDetailsService,
+                          @Autowired JwtRequestFilter jwtRequestFilter) {
+        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+        this.jwtUserDetailsService = jwtUserDetailsService;
+        this.jwtRequestFilter = jwtRequestFilter;
+    }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
-    }
-
-    @Bean
-    public JwtAuthenticationEntryPoint jwtAuthenticationEntryPointBean() {
-        return new JwtAuthenticationEntryPoint();
     }
 
     @Bean
