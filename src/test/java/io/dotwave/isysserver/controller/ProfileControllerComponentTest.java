@@ -1,13 +1,12 @@
 package io.dotwave.isysserver.controller;
 
 import io.dotwave.isysserver.data.ProfileRepository;
-import io.dotwave.isysserver.model.profile.Profile;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.Mockito.when;
@@ -15,8 +14,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@WebMvcTest(ProfileController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class ProfileControllerComponentTest {
 
     @Autowired
@@ -26,25 +25,14 @@ public class ProfileControllerComponentTest {
     private ProfileRepository mockProfileRepository;
 
     @Test
+    @WithMockUser
     public void givenGetUser_thatExists_returnUser() throws Exception {
         String testUsername = "TestUser";
 
         when(mockProfileRepository.existsByUsername(testUsername)).thenReturn(true);
 
         this.mockMvc.perform(
-                get("/users/" + testUsername))
-                .andDo(print())
-                .andExpect(status().is(200));
-    }
-
-    @Test
-    public void givenGetExistingUserPosts_returnPosts() throws Exception {
-
-        Profile testProfile = new Profile();
-        testProfile.setUsername("TestUser");
-
-        this.mockMvc.perform(
-                get("/users/TestUser/posts"))
+                get("/profile/" + testUsername))
                 .andDo(print())
                 .andExpect(status().is(200));
     }
