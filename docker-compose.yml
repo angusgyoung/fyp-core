@@ -17,6 +17,6 @@ services:
     env_file: .env
     ports:
       - 8008:8080
-      - 8000:8000
+      - 8009:8009
     depends_on:
       - isys-mongodb
