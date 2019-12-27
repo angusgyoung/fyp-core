@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  isys-mongodb:
+    container_name: isys-mongodb
+    image: mongo:3.6
+    restart: always
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    command: mongod --smallfiles --logpath=/dev/null
+  isys-server:
+    container_name: isys-core
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    env_file: .env
+    ports:
+      - 8008:8080
+      - 8000:8000
+    depends_on:
+      - isys-mongodb
