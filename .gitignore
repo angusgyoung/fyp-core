@@ -1,6 +1,9 @@
 .idea/
 .vscode/
-*.env
 target/
 .mvn/
+
 *.iml
+*.env
+
+mvnw*

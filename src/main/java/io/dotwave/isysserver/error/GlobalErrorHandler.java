@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Slf4j
 @ControllerAdvice
-public class GlobalErrorHanlder {
+public class GlobalErrorHandler {
 
     @ResponseBody
     @ExceptionHandler(value = ValidationException.class)
