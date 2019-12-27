@@ -1,3 +1,9 @@
-*.jar
 .idea/
+.vscode/
+
 target/
+
+.mvn/wrapper/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+*.iml
