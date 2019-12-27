@@ -8,20 +8,15 @@ services:
     environment:
       - MONGO_DATA_DIR=/data/db
       - MONGO_LOG_DIR=/dev/null
-    ports:
-      - 27017:27017
     command: mongod --smallfiles --logpath=/dev/null
   isys-server:
     container_name: isys-core
     build:
       context: ./
       dockerfile: Dockerfile
-    environment:
-      - logging.level.org.springframework.web=DEBUG
-      - logging.level.org.springframework.messaging=DEBUG
-      - logging.level.org.springframework.web.socket=DEBUG
+    env_file: .env
     ports:
       - 8008:8080
-      - 5006:5005
+      - 8000:8000
     depends_on:
       - isys-mongodb
