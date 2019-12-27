@@ -1,6 +1,8 @@
 package io.dotwave.isysserver.security.jwt;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.SignatureException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,10 +41,16 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
             try {
                 username = jwtTokenUtil.getUsernameFromToken(jwtToken);
-            } catch (IllegalArgumentException e) {
-                System.out.println("Unable to get JWT Token");
             } catch (ExpiredJwtException e) {
-                System.out.println("JWT Token has expired");
+                logger.warn("JWT token has expired");
+            } catch (SignatureException e) {
+                // in the case that the request does contain a jwt token but it
+                // has not been signed by this service (i.e signed with a different
+                // secret)
+                logger.warn(String.format("JWT token is invalid: %s", e.getMessage()));
+            } catch (JwtException | IllegalArgumentException e) {
+                // catch-all for other misc errors
+                logger.warn(String.format("Failed to process JWT token: %s", e.getMessage()));
             }
         } else {
             logger.warn("JWT Token does not begin with Bearer String");
