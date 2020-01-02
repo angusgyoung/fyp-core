@@ -20,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/auth")
 public class AuthController {
 
     // The minimum time in seconds before token expiry that a client can
@@ -42,7 +43,7 @@ public class AuthController {
         this.profileRepository = profileRepository;
     }
 
-    @PostMapping("/auth")
+    @PostMapping("")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
@@ -51,7 +52,7 @@ public class AuthController {
 
         // get the users details to return with the token
         Profile profile = profileRepository.findByUsername(userDetails.getUsername());
-        return ResponseEntity.ok(new JwtResponse(token, profile));
+        return ResponseEntity.ok(new JwtResponse(token, profile, jwtTokenUtil.getExpirationTimestampFromToken(token)));
     }
 
     // Generate a new JWT token for a client when the TTL is within the
@@ -60,13 +61,15 @@ public class AuthController {
     public ResponseEntity<?> refreshAuthenticationToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String tokenHeader) {
         // This endpoint is secured so we can be sure that the token is valid
         long currentTimestamp = System.currentTimeMillis() / 1000L;
-        long expiryTimestamp = jwtTokenUtil.getExpirationDateFromToken(tokenHeader.substring(7)).getTime() / 1000L;
+        long expiryTimestamp = jwtTokenUtil.getExpirationTimestampFromToken(tokenHeader.substring(7));
         if (expiryTimestamp - currentTimestamp < refreshThresholdSeconds) {
             UserDetails userDetails =
                     (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
             final String token = jwtTokenUtil.generateToken(userDetails);
-            return ResponseEntity.ok(new JwtResponse(token));
+            final long newTokenExpiry = jwtTokenUtil.getExpirationTimestampFromToken(token);
+
+            return ResponseEntity.ok(new JwtResponse(token, newTokenExpiry));
         }
         throw new ValidationException(String.format("Refresh token not available until %s seconds before expiry", refreshThresholdSeconds));
     }

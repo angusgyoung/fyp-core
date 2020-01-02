@@ -45,7 +45,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             try {
                 username = jwtTokenUtil.getUsernameFromToken(jwtToken);
             } catch (ExpiredJwtException e) {
-                logger.warn("JWT token has expired");
+                logger.info("JWT token has expired");
             } catch (SignatureException e) {
                 // in the case that the request does contain a jwt token but it
                 // has not been signed by this service (i.e signed with a different
@@ -56,7 +56,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 logger.warn(String.format("Failed to process JWT token: %s", e.getMessage()));
             }
         } else {
-            logger.warn("JWT Token does not begin with Bearer String");
+            logger.info("JWT Token does not begin with Bearer String");
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

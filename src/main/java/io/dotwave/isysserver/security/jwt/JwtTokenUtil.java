@@ -37,6 +37,10 @@ public class JwtTokenUtil implements Serializable {
         return getClaimFromToken(token, Claims::getExpiration);
     }
 
+    public long getExpirationTimestampFromToken(String token) {
+        return getExpirationDateFromToken((token)).getTime() / 1000L;
+    }
+
     private <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = getAllClaimsFromToken(token);
 
@@ -67,7 +71,6 @@ public class JwtTokenUtil implements Serializable {
                 .setExpiration(new Date(System.currentTimeMillis() + jwtTokenValidity * 1000))
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
     }
-
 
     public Boolean validateToken(String token, UserDetails userDetails) {
 

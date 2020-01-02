@@ -12,15 +12,18 @@ public class JwtResponse  implements Serializable {
 
     private final String jwtToken;
     private final Profile profile;
+    private final long expiryDate;
 
-    public JwtResponse(String jwtToken) {
+    public JwtResponse(String jwtToken, long expiryDate) {
         this.jwtToken = jwtToken;
         this.profile = null;
+        this.expiryDate = expiryDate;
     }
 
-    public JwtResponse(String jwtToken, Profile profile) {
+    public JwtResponse(String jwtToken, Profile profile, long expiryDate) {
         this.jwtToken = jwtToken;
         this.profile = profile;
+        this.expiryDate = expiryDate;
     }
 
 }

@@ -44,11 +44,11 @@ public class PostController {
     }
 
     @GetMapping("")
-    public ResponseEntity getPosts(@RequestParam(value = "username") Optional<String> username,
+    public ResponseEntity<?> getPosts(@RequestParam(value = "username") Optional<String> username,
                                    @RequestParam(value = PAGE_QUERY_PARAM) Optional<Integer> page,
                                    @RequestParam(PAGE_SIZE_QUERY_PARAM) Optional<Integer> size) {
-        Integer _page = page.orElse(0);
-        Integer _size = size.orElse(10);
+        int _page = page.orElse(0);
+        int _size = size.orElse(10);
 
         // if the request is for the posts of a particular user
         if (username.isPresent()) {
@@ -70,7 +70,7 @@ public class PostController {
     }
 
     @PostMapping("")
-    public ResponseEntity createPost(@RequestBody Post post, HttpServletRequest request) {
+    public ResponseEntity<?> createPost(@RequestBody Post post, HttpServletRequest request) {
 
         String username = jwtTokenUtil.getUsernameFromAuthorizationHeader(request.getHeader(HttpHeaders.AUTHORIZATION));
 
