@@ -1,0 +1,15 @@
+{
+  "name": "dht-node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dht-node.js",
+  "scripts": {
+    "start": "node dht-node.js"
+  },
+  "author": "gusdaghost",
+  "license": "ISC",
+  "dependencies": {
+    "bittorrent-dht": "^9.0.3",
+    "dotenv": "^8.2.0"
+  }
+}
