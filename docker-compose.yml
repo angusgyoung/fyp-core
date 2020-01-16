@@ -1,4 +1,4 @@
-version: "3"
+version: "3.3"
 
 services:
   isys-mongodb:
@@ -12,10 +12,11 @@ services:
   isys-dht-bootstrap-node:
     container_name: isys-dht-bootstrap-node
     build:
-      context: ./dht-bootstrap-node
+      context: ./dht-node
       dockerfile: Dockerfile
-    ports:
-      - 6969:6969/udp
+    environment:
+      - DEBUG=bittorrent-dht
+    network_mode: host
   isys-server:
     container_name: isys-core
     build:
