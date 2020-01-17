@@ -29,12 +29,10 @@ dhtNode.on("ready", () =>
     console.info("DHT: Node is ready to accept connections")
 );
 dhtNode.on("node", node => {
-    dhtNode.addNode(node);
     console.debug(
         "DHT: A new node has been added to the routing table:",
         `${node.host}:${node.port}`
     );
-    console.debug(dhtNode.toJSON());
 });
 dhtNode.on("error", error =>
     console.error("DHT: A fatal error has occurred:", error)
