@@ -1,11 +1,14 @@
 const DHT = require("bittorrent-dht");
+const cors = require("cors");
 const express = require("express");
 
 const bootstrapListenPort = process.env.NODE_PORT || 6881;
 const serverListenPort = process.env.API_PORT || 3000;
 
 const server = express();
+
 server.use(express.json());
+server.use(cors());
 
 // Set up our bootstrap node. Other nodes will initialise their routing tables from this node
 const nodeConfig = {
