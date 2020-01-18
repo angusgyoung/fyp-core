@@ -22,4 +22,6 @@ public class Post {
     private Long timestamp;
     @NotNull
     private String username;
+    @NotNull
+    private String signatureKey;
 }

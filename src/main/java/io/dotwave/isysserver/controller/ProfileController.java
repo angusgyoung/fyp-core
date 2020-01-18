@@ -26,7 +26,7 @@ public class ProfileController {
     // mapping to enquire email addresses as usernames don't
     // get truncated after the '.'.
     @GetMapping("/{username:.+}")
-    public ResponseEntity getUser(@PathVariable("username") String username) {
+    public ResponseEntity<?> getUser(@PathVariable("username") String username) {
         if (profileRepository.existsByUsername(username)) {
             return ResponseEntity.ok(profileRepository.findByUsername(username));
         }
@@ -34,7 +34,7 @@ public class ProfileController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity createUser(@RequestBody Map<String, String> body) {
+    public ResponseEntity<?> createUser(@RequestBody Map<String, String> body) {
         String username = body.get("username");
 
         if (profileRepository.existsByUsername(username)) {

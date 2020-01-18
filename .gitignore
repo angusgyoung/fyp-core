@@ -2,7 +2,8 @@
 .vscode/
 target/
 .mvn/
-
+**node_modules/
+**.prettierrc
 *.iml
 *.env
 

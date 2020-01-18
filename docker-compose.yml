@@ -1,4 +1,4 @@
-version: '3'
+version: "3.3"
 
 services:
   isys-mongodb:
@@ -9,6 +9,14 @@ services:
       - MONGO_DATA_DIR=/data/db
       - MONGO_LOG_DIR=/dev/null
     command: mongod --smallfiles --logpath=/dev/null
+  isys-dht-bootstrap-node:
+    container_name: isys-dht-bootstrap-node
+    build:
+      context: ./dht-node
+      dockerfile: Dockerfile
+    environment:
+      - DEBUG=bittorrent-dht
+    network_mode: host
   isys-server:
     container_name: isys-core
     build:
@@ -17,6 +25,7 @@ services:
     env_file: .env
     ports:
       - 8008:8080
-      - 8000:8000
+      - 8009:8009
     depends_on:
       - isys-mongodb
+      - isys-dht-bootstrap-node
