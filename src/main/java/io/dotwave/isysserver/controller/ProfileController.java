@@ -1,15 +1,13 @@
 package io.dotwave.isysserver.controller;
 
 import io.dotwave.isysserver.data.ProfileRepository;
-import io.dotwave.isysserver.error.ValidationException;
-import io.dotwave.isysserver.model.profile.Profile;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/profile")
@@ -31,20 +29,6 @@ public class ProfileController {
             return ResponseEntity.ok(profileRepository.findByUsername(username));
         }
         else return ResponseEntity.notFound().build();
-    }
-
-    @PostMapping("/create")
-    public ResponseEntity<?> createUser(@RequestBody Map<String, String> body) {
-        String username = body.get("username");
-
-        if (profileRepository.existsByUsername(username)) {
-            throw new ValidationException("Username already exists");
-        }
-        String password = body.get("password");
-
-        // for now we can just use a random image of a cat
-        Profile profile = new Profile(username, password, "https://cataas.com/cat");
-        return ResponseEntity.status(HttpStatus.CREATED).body(profileRepository.save(profile));
     }
 
 }
