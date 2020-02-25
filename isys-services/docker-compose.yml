@@ -1,0 +1,29 @@
+version: "3.3"
+
+services:
+  dht-bootstrap-node:
+      container_name: dht-bootstrap-node
+      build:
+        context: ./dht-node
+        dockerfile: Dockerfile
+      network_mode: host
+
+  pks-mongodb:
+      container_name: pks-mongodb
+      image: mongo:4.2.3-bionic
+      restart: always
+      environment:
+        - MONGO_DATA_DIR=/data/db
+        - MONGO_LOG_DIR=/dev/null
+  pks-keyserver:
+      container_name: pks-keyserver
+      build:
+        context: ./keyserver
+        dockerfile: docker/Dockerfile
+      env_file: ./keyserver/.env
+      links: 
+        - pks-mongodb
+      ports:
+        - 8888:8888
+      depends_on:
+        - pks-mongodb

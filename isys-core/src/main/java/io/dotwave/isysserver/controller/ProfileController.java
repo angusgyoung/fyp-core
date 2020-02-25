@@ -30,5 +30,4 @@ public class ProfileController {
         }
         else return ResponseEntity.notFound().build();
     }
-
 }
