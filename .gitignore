@@ -4,7 +4,7 @@
 **.mvn/
 **node_modules/
 **.prettierrc
-*.iml
-*.env
+**.iml
+**.env
 
 mvnw*

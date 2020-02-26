@@ -1,0 +1,4 @@
+[submodule "isys-services/keyserver"]
+	path = isys-services/keyserver
+	url = git@github.com:uen/keyserver.git
+	branch = master
