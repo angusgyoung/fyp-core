@@ -1,5 +1,6 @@
 package io.dotwave.isysserver.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -10,11 +11,11 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class MessageBrokerConfig implements WebSocketMessageBrokerConfigurer {
 
+    @Value("${allowed-origin:*}")
+    private String allowedOrigin;
+
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        // topics will be for things like posts (and maybe stuff to do with
-        // integrity checking, queues will be for things for specific users
-        // i.e a users posts
         config.enableSimpleBroker("/topic/", "/queue/");
         config.setApplicationDestinationPrefixes("/app");
     }
@@ -22,7 +23,7 @@ public class MessageBrokerConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/broker")
-                .setAllowedOrigins("*")
+                .setAllowedOrigins(allowedOrigin)
                 .withSockJS();
     }
 
