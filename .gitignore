@@ -1,10 +1,10 @@
-.idea/
-.vscode/
-target/
-.mvn/
+**.idea/
+**.vscode/
+**target/
+**.mvn/
 **node_modules/
 **.prettierrc
-*.iml
-*.env
+**.iml
+**.env
 
 mvnw*

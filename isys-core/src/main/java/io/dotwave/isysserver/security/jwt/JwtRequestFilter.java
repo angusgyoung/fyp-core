@@ -35,28 +35,40 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                                     HttpServletResponse httpServletResponse,
                                     FilterChain filterChain) throws ServletException, IOException {
         final String requestTokenHeader = httpServletRequest.getHeader("Authorization");
-
+        final String requestTokenQuery = httpServletRequest.getParameter("token");
         String username = null;
         String jwtToken = null;
 
-        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
-            jwtToken = requestTokenHeader.substring(7);
+        if (requestTokenHeader != null) {
+            if (requestTokenHeader.startsWith("Bearer ")) {
+                jwtToken = requestTokenHeader.substring(7);
 
+                try {
+                    username = jwtTokenUtil.getUsernameFromToken(jwtToken);
+                } catch (ExpiredJwtException e) {
+                    logger.info("JWT token has expired");
+                } catch (SignatureException e) {
+                    // in the case that the request does contain a jwt token but it
+                    // has not been signed by this service (i.e signed with a different
+                    // secret)
+                    logger.warn(String.format("JWT token is invalid: %s", e.getMessage()));
+                } catch (JwtException | IllegalArgumentException e) {
+                    // catch-all for other misc errors
+                    logger.warn(String.format("Failed to process JWT token: %s", e.getMessage()));
+                }
+            } else {
+                logger.info("JWT Token does not begin with Bearer String");
+            }
+        }
+
+        if (requestTokenQuery != null) {
             try {
+                jwtToken = requestTokenQuery;
                 username = jwtTokenUtil.getUsernameFromToken(jwtToken);
-            } catch (ExpiredJwtException e) {
-                logger.info("JWT token has expired");
-            } catch (SignatureException e) {
-                // in the case that the request does contain a jwt token but it
-                // has not been signed by this service (i.e signed with a different
-                // secret)
-                logger.warn(String.format("JWT token is invalid: %s", e.getMessage()));
             } catch (JwtException | IllegalArgumentException e) {
                 // catch-all for other misc errors
                 logger.warn(String.format("Failed to process JWT token: %s", e.getMessage()));
             }
-        } else {
-            logger.info("JWT Token does not begin with Bearer String");
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

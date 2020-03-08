@@ -10,6 +10,7 @@ import io.dotwave.isysserver.security.jwt.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,6 +19,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -44,7 +47,7 @@ public class AuthController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+    public ResponseEntity<?> authenticateUser(@RequestBody JwtRequest authenticationRequest) throws Exception {
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
         final UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
@@ -72,6 +75,23 @@ public class AuthController {
             return ResponseEntity.ok(new JwtResponse(token, newTokenExpiry));
         }
         throw new ValidationException(String.format("Refresh token not available until %s seconds before expiry", refreshThresholdSeconds));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@RequestBody Map<String, String> body) {
+        String username = body.get("username");
+
+        if (profileRepository.existsByUsername(username)) {
+            throw new ValidationException("Username already exists");
+        }
+        String password = body.get("password");
+
+        // for now we can just use a random image of a cat
+        Profile profile = profileRepository.save(new Profile(username, password, "https://cataas.com/cat"));
+        final UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(profile.getUsername());
+        final String token = jwtTokenUtil.generateToken(userDetails);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(new JwtResponse(token, profile, jwtTokenUtil.getExpirationTimestampFromToken(token)));
     }
 
     private void authenticate(String username, String password) throws Exception {

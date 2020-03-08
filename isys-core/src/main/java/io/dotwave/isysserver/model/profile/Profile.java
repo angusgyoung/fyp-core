@@ -29,5 +29,5 @@ public class Profile {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String encryptedPassword;
     private String profileImageUrl;
-    private Long accountCreatedTimestamp;
+    private long accountCreatedTimestamp;
 }
