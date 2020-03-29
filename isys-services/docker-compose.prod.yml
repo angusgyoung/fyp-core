@@ -16,10 +16,8 @@ services:
 
   keyserver:
     container_name: keyserver
-    build:
-      context: ./keyserver
-      dockerfile: Dockerfile
-    env_file: ./keyserver/.env
+    image: gus33/keyserver:stable
+    restart: always
     ports:
       - 8888:8888
     depends_on:
