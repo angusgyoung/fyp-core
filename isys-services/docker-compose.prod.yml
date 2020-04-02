@@ -1,10 +1,51 @@
 version: "3.3"
 
 services:
-  dht-bootstrap-node:
-    container_name: dht-bootstrap-node
+  dht-gateway:
+    container_name: dht-gateway
+    image: registry.dotwave.io/dht-gateway
+    restart: always
+    depends_on:
+      - dht-bootstrap-node_1
+      - dht-bootstrap-node_2
+      - dht-bootstrap-node_3
+    ports:
+      - 6881:6881/udp
+      - 3000:3000
+
+  dht-bootstrap-node_1:
+    container_name: dht-bootstrap-node_1
     image: gus33/bittorrent-dht-node:stable
-    network_mode: host
+    restart: always
+    environment:
+      - BOOTSTRAP_NODES=dht-bootstrap-node_2:6902,dht-bootstrap-node_3:6903
+      - NODE_LISTEN_PORT=6901
+      - API_LISTEN_PORT=3001
+    ports:
+      - 6901:6901/udp
+      - 3001:3001
+  dht-bootstrap-node_2:
+    container_name: dht-bootstrap-node_2
+    image: gus33/bittorrent-dht-node:stable
+    restart: always
+    environment:
+      - BOOTSTRAP_NODES=dht-bootstrap-node_1:6901,dht-bootstrap-node_3:6903
+      - NODE_LISTEN_PORT=6902
+      - API_LISTEN_PORT=3002
+    ports:
+      - 6902:6902/udp
+      - 3002:3002
+  dht-bootstrap-node_3:
+    container_name: dht-bootstrap-node_3
+    image: gus33/bittorrent-dht-node:stable
+    restart: always
+    environment:
+      - BOOTSTRAP_NODES=dht-bootstrap-node_1:6901,dht-bootstrap-node_2:6902
+      - NODE_LISTEN_PORT=6903
+      - API_LISTEN_PORT=3003
+    ports:
+      - 6903:6903/udp
+      - 3003:3003
 
   keyserver-mongodb:
     container_name: keyserver-mongodb
