@@ -6,7 +6,7 @@ import io.dotwave.isysserver.error.ValidationException;
 import io.dotwave.isysserver.model.post.Post;
 import io.dotwave.isysserver.security.jwt.JwtTokenUtil;
 import io.dotwave.isysserver.util.MessageBrokerUtil;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +25,6 @@ import static io.dotwave.isysserver.util.Constants.PAGE_SIZE_QUERY_PARAM;
 @RestController
 @RequestMapping("/posts")
 @Validated
-@Slf4j
 public class PostController {
 
     private final PostRepository postRepository;

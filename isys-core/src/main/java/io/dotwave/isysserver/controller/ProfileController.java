@@ -2,7 +2,7 @@ package io.dotwave.isysserver.controller;
 
 import io.dotwave.isysserver.data.ProfileRepository;
 import io.dotwave.isysserver.model.profile.Profile;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/profile")
-@Slf4j
 public class ProfileController {
 
     private final ProfileRepository profileRepository;

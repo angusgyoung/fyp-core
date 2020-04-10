@@ -1,17 +1,9 @@
 package io.dotwave.isysserver.model.post;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.NotNull;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class Post {
 
     @Id
@@ -24,4 +16,28 @@ public class Post {
     private String username;
     @NotNull
     private String signatureKey;
+
+    public Post(String id, @NotNull String content, Long timestamp, @NotNull String username, @NotNull String signatureKey) {
+        this.id = id;
+        this.content = content;
+        this.timestamp = timestamp;
+        this.username = username;
+        this.signatureKey = signatureKey;
+    }
+
+    public Post() {
+    }
+
+    public void setContent(@NotNull String content) {
+        this.content = content;
+    }
+
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public void setUsername(@NotNull String username) {
+        this.username = username;
+    }
+
 }
