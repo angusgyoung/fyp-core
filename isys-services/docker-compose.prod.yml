@@ -3,11 +3,15 @@ version: "3.3"
 services:
   dht-gateway:
     container_name: dht-gateway
-    build:
-      context: ./dht-gateway
-      dockerfile: Dockerfile
-    network_mode: host
+    image: registry.dotwave.io/dht-gateway
     restart: always
+    depends_on:
+      - dht-bootstrap-node_1
+      - dht-bootstrap-node_2
+      - dht-bootstrap-node_3
+    ports:
+      - 6881:6881/udp
+      - 3000:3000
 
   dht-bootstrap-node_1:
     container_name: dht-bootstrap-node_1
@@ -53,10 +57,8 @@ services:
 
   keyserver:
     container_name: keyserver
-    build:
-      context: ./keyserver
-      dockerfile: Dockerfile
-    env_file: ./keyserver/.env
+    image: gus33/keyserver:stable
+    restart: always
     ports:
       - 8888:8888
     depends_on:

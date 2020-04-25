@@ -12,12 +12,9 @@ services:
 
   isys-api:
     container_name: isys-api
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    env_file: .env
+    image: registry.dotwave.io/isys-api:stable
+    restart: always
     ports:
       - 8008:8080
-      - 8009:8009
     depends_on:
       - isys-mongodb
