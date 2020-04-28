@@ -21,8 +21,7 @@ public class ProfileControllerComponentTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    private ProfileRepository mockProfileRepository;
+    @MockBean private ProfileRepository mockProfileRepository;
 
     @Test
     @WithMockUser
@@ -32,7 +31,7 @@ public class ProfileControllerComponentTest {
         when(mockProfileRepository.existsByUsername(testUsername)).thenReturn(true);
 
         this.mockMvc.perform(
-                get("/profile/" + testUsername))
+                get("/profile").param("username", testUsername))
                 .andDo(print())
                 .andExpect(status().is(200));
     }

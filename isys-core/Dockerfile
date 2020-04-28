@@ -4,7 +4,7 @@ WORKDIR /workspace/app
 COPY pom.xml .
 COPY src src
 
-RUN mvn package -DskipTests
+RUN mvn package
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
 FROM adoptopenjdk/openjdk11:alpine-slim

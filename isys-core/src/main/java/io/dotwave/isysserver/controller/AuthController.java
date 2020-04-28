@@ -86,8 +86,14 @@ public class AuthController {
         }
         String password = body.get("password");
 
-        // for now we can just use a random image of a cat
-        Profile profile = profileRepository.save(new Profile(username, password, "https://cataas.com/cat"));
+        // tinygraphs currently doesn't support https. This change is pending in
+        // https://github.com/taironas/tinygraphs/issues/101, but for now we will
+        // just use http. This will cause most browsers to mark the site as unsecure.
+        Profile profile = profileRepository.save(new Profile(
+                username,
+                password,
+                String.format("http://tinygraphs.com/spaceinvaders/%s?theme=duskfalling&numcolors=4&size=300&fmt=svg", username)
+        ));
         final UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(profile.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails);
 
