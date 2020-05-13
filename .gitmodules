@@ -1,4 +1,8 @@
 [submodule "isys-services/keyserver"]
 	path = isys-services/keyserver
-	url = git@github.com:uen/keyserver.git
+	url = https://github.com/angusgyoung/keyserver.git
+	branch = master
+[submodule "isys-services/bittorrent-dht-node"]
+	path = isys-services/bittorrent-dht-node
+	url = https://github.com/angusgyoung/bittorrent-dht-node.git
 	branch = master

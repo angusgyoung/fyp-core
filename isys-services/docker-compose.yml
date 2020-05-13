@@ -11,7 +11,9 @@ services:
 
   dht-bootstrap-node_1:
     container_name: dht-bootstrap-node_1
-    image: gus33/bittorrent-dht-node:stable
+    build:
+      context: ./bittorrent-dht-node
+      dockerfile: Dockerfile
     restart: always
     environment:
       - BOOTSTRAP_NODES=dht-bootstrap-node_2:6902,dht-bootstrap-node_3:6903
@@ -22,7 +24,9 @@ services:
       - 3001:3001
   dht-bootstrap-node_2:
     container_name: dht-bootstrap-node_2
-    image: gus33/bittorrent-dht-node:stable
+    build:
+      context: ./bittorrent-dht-node
+      dockerfile: Dockerfile
     restart: always
     environment:
       - BOOTSTRAP_NODES=dht-bootstrap-node_1:6901,dht-bootstrap-node_3:6903
@@ -33,7 +37,9 @@ services:
       - 3002:3002
   dht-bootstrap-node_3:
     container_name: dht-bootstrap-node_3
-    image: gus33/bittorrent-dht-node:stable
+    build:
+      context: ./bittorrent-dht-node
+      dockerfile: Dockerfile
     restart: always
     environment:
       - BOOTSTRAP_NODES=dht-bootstrap-node_1:6901,dht-bootstrap-node_2:6902
